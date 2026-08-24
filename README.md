@@ -36,11 +36,22 @@ This is a judgement, not a standard.
 
 ## Funnel
 
-The page has no product CTA. The conversion is a newsletter signup: an inline
-email form posting to ai-tldr.dev, framed around the fact that stealth terms
-change without announcement. That framing is what keeps the tool useful after
-the initial traffic spike -- the answer it gives has an expiry date, and the
-newsletter is how you learn when it expires.
+The page has no product CTA. The conversion is a button to ai-tldr.dev.
+
+It is a standing block placed after the alternatives table, not a result-gated
+CTA and not an email capture. Three deliberate choices:
+
+- **A link, not a form.** Asking for an email on a page someone landed on
+  thirty seconds ago converts badly and reads as a toll gate. Send them to the
+  site and let it make its own case.
+- **Always present.** Visitors who never tick a box still see it, and they are
+  a large share of the traffic.
+- **Placed late.** After the answer and the alternatives, so it reads as the
+  closing note of the dossier rather than an interruption.
+
+The framing is what keeps the tool useful after the initial spike: this page's
+own answer has an expiry date, so "track what changes" is the honest completion
+of the tool rather than a bolted-on ask.
 
 ## What this deliberately does not claim
 

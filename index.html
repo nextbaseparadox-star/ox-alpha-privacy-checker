@@ -119,25 +119,23 @@ h1{font-family:var(--serif);font-size:clamp(34px,5.4vw,52px);font-weight:500;
 .steps li b{color:var(--ink);font-weight:600}
 
 /* ── bridge ───────────────────────────────────────────────── */
-.bridge{border-top:1px solid var(--rule);background:var(--amber-wash);
-  padding:20px 26px;display:flex;align-items:center;justify-content:space-between;
-  gap:26px;flex-wrap:wrap}
-.sub-copy{flex:1;min-width:260px}
-.sub-copy p{font-size:14.5px;color:var(--ink-2);max-width:50ch}
-.sub-copy b{color:var(--ink);font-weight:600}
-.sub-note{display:block;margin-top:7px;font:400 12.5px/1.4 var(--mono);color:var(--ink-3)}
-.sub-form{display:flex;gap:0;flex:0 0 auto}
-.sub-form input{height:44px;width:210px;padding:0 13px;background:var(--paper);
-  color:var(--ink);border:1px solid var(--ink);border-right:0;
-  font:400 14px/1 var(--sans);outline:2px solid transparent;outline-offset:1px;
-  transition:background-color .13s var(--ease)}
-.sub-form input::placeholder{color:var(--ink-4)}
-.sub-form input:focus-visible{outline-color:var(--seal)}
+/* Standing block, not a result-gated CTA: it sits after the alternatives table
+   so it reads as the closing note of the dossier rather than an interruption,
+   and it is present whether or not anything has been selected. */
+.track{margin-top:46px;border-top:2px solid var(--ink);border-bottom:1px solid var(--rule);
+  background:var(--amber-wash)}
+.track-in{padding:26px 28px;max-width:72ch}
+.track-lead{font-family:var(--serif);font-size:22px;font-weight:600;line-height:1.25;
+  letter-spacing:-.015em;margin-bottom:9px}
+.track-body{font-size:14.5px;color:var(--ink-2);margin-bottom:18px;max-width:62ch}
+.track-note{display:block;margin-top:11px;font:400 12.5px/1.4 var(--mono);color:var(--ink-3)}
 .btn{display:inline-flex;align-items:center;gap:8px;height:44px;padding:0 20px;
   background:var(--ink);color:var(--paper);font:500 14px/1 var(--sans);
   text-decoration:none;white-space:nowrap;border:1px solid var(--ink);cursor:pointer;
   transition:background-color .14s var(--ease)}
 .btn:hover{background:#3a322a;text-decoration:none}
+.btn svg{transition:transform .16s var(--ease)}
+.btn:hover svg{transform:translateX(3px)}
 
 /* ── ledger ───────────────────────────────────────────────── */
 table{width:100%;border-collapse:collapse;font-size:14px}
@@ -172,9 +170,7 @@ footer{margin-top:44px;border-top:1px solid var(--rule);padding:24px 0 70px;
   .score{border-right:0;border-bottom:1px solid var(--rule);flex-direction:row;gap:14px;padding:18px}
   .score .d{margin-top:0}
   .v-body{padding:20px}
-  .bridge{padding:18px 20px}
-  .sub-form{width:100%}
-  .sub-form input{flex:1;width:auto;min-width:0}
+  .track-in{padding:20px}
 }
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
@@ -212,16 +208,6 @@ footer{margin-top:44px;border-top:1px solid var(--rule);padding:24px 0 70px;
   </div>
   <div class="flags" id="flagRow"></div>
   <div class="steps"><h4>Recommended precautions</h4><ol id="steps"></ol></div>
-  <div class="bridge">
-    <div class="sub-copy">
-      <p id="bridgeCopy"></p>
-      <span class="sub-note">Free. New models, pricing shifts and terms changes, once a week.</span>
-    </div>
-    <form class="sub-form" id="subForm" action="https://ai-tldr.dev/" method="get" target="_blank">
-      <input type="email" name="email" id="subEmail" placeholder="you@email.com" required aria-label="Email address">
-      <button type="submit" class="btn">Subscribe</button>
-    </form>
-  </div>
 </section>
 
 <section class="block">
@@ -238,6 +224,19 @@ footer{margin-top:44px;border-top:1px solid var(--rule);padding:24px 0 70px;
     </tbody>
   </table>
 </section>
+
+<aside class="track">
+  <div class="track-in">
+    <p class="track-lead">These terms are a snapshot, not a guarantee.</p>
+    <p class="track-body">Ox Alpha arrived with no announcement and its provider is still unnamed.
+    Stealth models get identified, free previews get priced, and retention terms get rewritten —
+    usually with no notice. Everything on this page has an expiry date.</p>
+    <a class="btn" id="trackCta" href="https://ai-tldr.dev/" target="_blank" rel="noopener">
+      Track new models at AI/TLDR
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6.5 3.5L11 8l-4.5 4.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+    <span class="track-note">Weekly. New models, pricing shifts, terms changes.</span>
+  </div>
+</aside>
 
 <section class="block">
   <div class="block-head"><h2>Sources &amp; method</h2><span>checkable</span></div>
@@ -362,19 +361,17 @@ function render(){
   steps.push("Re-check the model page before your next session. Stealth terms change without notice.");
   $("steps").innerHTML=steps.map(s=>`<li>${s}</li>`).join("");
 
-  $("bridgeCopy").innerHTML = score>=55
-    ? `<b>Ox Alpha appeared with no announcement, and its terms can change the same way.</b> Stealth models get named, free pricing ends, retention policies get rewritten. Get told when they do.`
-    : score>=25
-    ? `<b>These terms are a snapshot, not a guarantee.</b> Stealth previews get named and repriced without warning. Get told when this one changes.`
-    : `<b>Worth knowing when this changes.</b> Free previews end and stealth providers get identified — usually with no announcement.`;
+
 }
 
-/* The form posts to ai-tldr.dev in a new tab, so the page is not torn down and
-   the beacon has time to leave without deferring the submit. */
-$("subForm").addEventListener("submit",()=>{
-  track("newsletter_submit",{
-    score: String(Math.min(100,ITEMS.filter(i=>chosen.has(i[0])).reduce((s,i)=>s+i[3],0))),
-    types: String(chosen.size)
+/* Opens in a new tab, so the page is never torn down and the beacon always has
+   time to leave — no need to defer navigation the way a same-tab link requires.
+   Carries whether the visitor had actually used the tool before clicking. */
+$("trackCta").addEventListener("click",()=>{
+  track("newsletter_click",{
+    score:  String(Math.min(100,ITEMS.filter(i=>chosen.has(i[0])).reduce((s,i)=>s+i[3],0))),
+    types:  String(chosen.size),
+    used_tool: chosen.size ? "yes" : "no"
   });
 });
 </script>
