@@ -34,6 +34,14 @@ band into low (<25), medium (25-54), high (55+).
 
 This is a judgement, not a standard.
 
+## Funnel
+
+The page has no product CTA. The conversion is a newsletter signup: an inline
+email form posting to ai-tldr.dev, framed around the fact that stealth terms
+change without announcement. That framing is what keeps the tool useful after
+the initial traffic spike -- the answer it gives has an expiry date, and the
+newsletter is how you learn when it expires.
+
 ## What this deliberately does not claim
 
 An anonymous provider is not the same as a bad actor, and stealth previews are a

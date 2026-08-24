@@ -121,16 +121,23 @@ h1{font-family:var(--serif);font-size:clamp(34px,5.4vw,52px);font-weight:500;
 /* ── bridge ───────────────────────────────────────────────── */
 .bridge{border-top:1px solid var(--rule);background:var(--amber-wash);
   padding:20px 26px;display:flex;align-items:center;justify-content:space-between;
-  gap:24px;flex-wrap:wrap}
-.bridge p{font-size:14.5px;color:var(--ink-2);max-width:52ch}
-.bridge b{color:var(--ink);font-weight:600}
+  gap:26px;flex-wrap:wrap}
+.sub-copy{flex:1;min-width:260px}
+.sub-copy p{font-size:14.5px;color:var(--ink-2);max-width:50ch}
+.sub-copy b{color:var(--ink);font-weight:600}
+.sub-note{display:block;margin-top:7px;font:400 12.5px/1.4 var(--mono);color:var(--ink-3)}
+.sub-form{display:flex;gap:0;flex:0 0 auto}
+.sub-form input{height:44px;width:210px;padding:0 13px;background:var(--paper);
+  color:var(--ink);border:1px solid var(--ink);border-right:0;
+  font:400 14px/1 var(--sans);outline:2px solid transparent;outline-offset:1px;
+  transition:background-color .13s var(--ease)}
+.sub-form input::placeholder{color:var(--ink-4)}
+.sub-form input:focus-visible{outline-color:var(--seal)}
 .btn{display:inline-flex;align-items:center;gap:8px;height:44px;padding:0 20px;
   background:var(--ink);color:var(--paper);font:500 14px/1 var(--sans);
-  text-decoration:none;white-space:nowrap;border:1px solid var(--ink);
+  text-decoration:none;white-space:nowrap;border:1px solid var(--ink);cursor:pointer;
   transition:background-color .14s var(--ease)}
 .btn:hover{background:#3a322a;text-decoration:none}
-.btn svg{transition:transform .16s var(--ease)}
-.btn:hover svg{transform:translateX(3px)}
 
 /* ── ledger ───────────────────────────────────────────────── */
 table{width:100%;border-collapse:collapse;font-size:14px}
@@ -166,6 +173,8 @@ footer{margin-top:44px;border-top:1px solid var(--rule);padding:24px 0 70px;
   .score .d{margin-top:0}
   .v-body{padding:20px}
   .bridge{padding:18px 20px}
+  .sub-form{width:100%}
+  .sub-form input{flex:1;width:auto;min-width:0}
 }
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
@@ -204,9 +213,14 @@ footer{margin-top:44px;border-top:1px solid var(--rule);padding:24px 0 70px;
   <div class="flags" id="flagRow"></div>
   <div class="steps"><h4>Recommended precautions</h4><ol id="steps"></ol></div>
   <div class="bridge">
-    <p id="bridgeCopy"></p>
-    <a class="btn" id="cta" href="#">Run agents on your own infrastructure
-      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6.5 3.5L11 8l-4.5 4.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+    <div class="sub-copy">
+      <p id="bridgeCopy"></p>
+      <span class="sub-note">Free. New models, pricing shifts and terms changes, once a week.</span>
+    </div>
+    <form class="sub-form" id="subForm" action="https://ai-tldr.dev/" method="get" target="_blank">
+      <input type="email" name="email" id="subEmail" placeholder="you@email.com" required aria-label="Email address">
+      <button type="submit" class="btn">Subscribe</button>
+    </form>
   </div>
 </section>
 
@@ -215,9 +229,9 @@ footer{margin-top:44px;border-top:1px solid var(--rule);padding:24px 0 70px;
   <table>
     <thead><tr><th>Instead of Ox Alpha</th><th>Why</th><th>Trade-off</th></tr></thead>
     <tbody>
-      <tr><td><b>A named provider with a zero-retention policy</b><span class="sub">Anthropic, OpenAI and Google all publish enterprise terms with no training use and defined retention windows</span></td>
+      <tr><td><b>A named provider with a published retention policy</b><span class="sub">Anthropic, OpenAI and Google all publish enterprise terms with defined retention windows and no training use</span></td>
         <td>You know who holds the data and can point at a contract</td><td>Paid</td></tr>
-      <tr><td><b>A model you host yourself</b><span class="sub">Qwen, DeepSeek, GLM and Llama weights run on your own hardware</span></td>
+      <tr><td><b>A model you run yourself</b><span class="sub">Qwen, DeepSeek, GLM and Llama weights run on hardware you control</span></td>
         <td>Nothing leaves your machine</td><td>Hardware + setup</td></tr>
       <tr><td><b>Ox Alpha, but only on code you would publish</b><span class="sub">Open-source work, throwaway scripts, public documentation</span></td>
         <td>Retention stops mattering when the input is already public</td><td>Narrow use</td></tr>
@@ -256,15 +270,15 @@ footer{margin-top:44px;border-top:1px solid var(--rule);padding:24px 0 70px;
   <details><summary><span class="n">04</span>This will go stale</summary>
     <div class="note-b"><p>Stealth models get named, pricing stops being free, and terms change.
     Re-check the source page before relying on any of this.</p>
-    <p>New models appear on OpenRouter most weeks, usually without an announcement.
-    <a href="https://blognetwork.dev" target="_blank" rel="noopener">BlogNetwork</a> tracks
-    launches, pricing shifts and terms changes as they land.</p></div>
+    <p>New models appear on OpenRouter most weeks, usually without an announcement —
+    <a href="https://ai-tldr.dev/" target="_blank" rel="noopener">AI/TLDR</a> tracks launches,
+    pricing shifts and terms changes as they land.</p></div>
   </details>
 </section>
 
 <footer>
   <span>Not affiliated with OpenRouter or the Ox Alpha provider. Facts quoted from public pages, 20 Aug 2026.</span>
-  <a id="footCta" href="#">Built by Ampere.sh</a>
+  <a href="https://ai-tldr.dev/" target="_blank" rel="noopener">Tracking new models weekly at AI/TLDR</a>
 </footer>
 
 </div>
@@ -306,7 +320,6 @@ ITEMS.forEach(([id,label,sub])=>{
   grid.appendChild(l);
 });
 
-const utm=m=>`https://www.ampere.sh/?utm_source=ox-alpha-privacy&utm_medium=${m}&utm_campaign=ox-alpha-stealth`;
 function track(name,props,done){
   if(window.plausible) window.plausible(name,{props,callback:done}); else if(done) done();
 }
@@ -350,28 +363,20 @@ function render(){
   $("steps").innerHTML=steps.map(s=>`<li>${s}</li>`).join("");
 
   $("bridgeCopy").innerHTML = score>=55
-    ? `<b>The problem is not the model, it is where it runs.</b> Ampere runs agents on infrastructure you control, with encrypted keys and isolated data, so the retention policy is yours rather than an anonymous provider's.`
+    ? `<b>Ox Alpha appeared with no announcement, and its terms can change the same way.</b> Stealth models get named, free pricing ends, retention policies get rewritten. Get told when they do.`
     : score>=25
-    ? `<b>Worth keeping the boundary deliberate.</b> Ampere runs agents with encrypted keys and isolated data, so sensitive work does not depend on a stranger's retention terms.`
-    : `<b>Fine for this workload.</b> When work moves to something you would not publish, Ampere runs agents with encrypted keys and isolated data on infrastructure you control.`;
-
-  const med=score>=55?"result-high":score>=25?"result-med":"result-low";
-  $("cta").href=utm(med);
+    ? `<b>These terms are a snapshot, not a guarantee.</b> Stealth previews get named and repriced without warning. Get told when this one changes.`
+    : `<b>Worth knowing when this changes.</b> Free previews end and stealth providers get identified — usually with no announcement.`;
 }
 
-["cta","footCta"].forEach(id=>{
-  $(id).addEventListener("click",ev=>{
-    const a=ev.currentTarget;
-    const props={placement:id==="footCta"?"footer":"result",
-      score:String(Math.min(100,ITEMS.filter(i=>chosen.has(i[0])).reduce((s,i)=>s+i[3],0))),
-      types:String(chosen.size)};
-    if(ev.metaKey||ev.ctrlKey||ev.shiftKey||ev.button!==0){ track("ampere_click",props); return; }
-    ev.preventDefault();
-    let gone=false; const go=()=>{if(gone)return;gone=true;window.location.href=a.href;};
-    track("ampere_click",props,go); setTimeout(go,900);
+/* The form posts to ai-tldr.dev in a new tab, so the page is not torn down and
+   the beacon has time to leave without deferring the submit. */
+$("subForm").addEventListener("submit",()=>{
+  track("newsletter_submit",{
+    score: String(Math.min(100,ITEMS.filter(i=>chosen.has(i[0])).reduce((s,i)=>s+i[3],0))),
+    types: String(chosen.size)
   });
 });
-$("footCta").href=utm("footer");
 </script>
 </body>
 </html>
