@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ox Alpha — what happens to the code you send it?</title>
+<meta name="description" content="Ox Alpha is a free stealth model on OpenRouter with an anonymous provider that retains your prompts. Work out what is safe to send it.">
+<link rel="canonical" href="https://ox-alpha-privacy-checker.vercel.app/">
+<meta property="og:title" content="Ox Alpha — what happens to the code you send it?">
+<meta property="og:description" content="Anonymous provider, prompts retained, free preview pricing. Check your exposure before you paste.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&family=Public+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<!-- Privacy-friendly analytics by Plausible -->
+<script async src="https://plausible.io/js/pa-4vnbMHSz3kpXSE5mqPZTP.js"></script>
+<script>
+  window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+  plausible.init()
+</script>
+<style>
+/* Hallmark · macrostructure: dossier · genre: editorial · contrast: pass (40-41) */
+:root{
+  --paper:#faf7f2; --paper-2:#f3eee5; --paper-3:#ece5d8;
+  --rule:#ddd3c2; --rule-soft:#e8e0d2;
+  --ink:#241f1a; --ink-2:#4a423a; --ink-3:#7d7267; --ink-4:#a29688;
+  --seal:#8c2f24; --seal-2:#a84435; --seal-wash:#f5e6e2;
+  --amber:#a8720f; --amber-wash:#f8eeda;
+  --moss:#4a6741; --moss-wash:#e9efe5;
+  --serif:"Newsreader",Georgia,serif;
+  --sans:"Public Sans",-apple-system,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,monospace;
+  --ease:cubic-bezier(.2,.7,.3,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--sans);
+  font-size:15.5px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.sheet{max-width:1000px;margin:0 auto;padding:0 30px}
+a{color:var(--seal);text-decoration:underline;text-underline-offset:2px;
+  text-decoration-thickness:1px;text-decoration-color:var(--rule)}
+a:hover{text-decoration-color:var(--seal)}
+:focus-visible{outline:2px solid var(--seal);outline-offset:2px}
+
+/* ── masthead ─────────────────────────────────────────────── */
+.head{padding:52px 0 0}
+.kicker{display:flex;align-items:center;gap:12px;margin-bottom:26px}
+.kicker span{font:500 10.5px/1 var(--mono);letter-spacing:.15em;text-transform:uppercase;
+  color:var(--ink-4)}
+.kicker hr{flex:1;border:0;border-top:1px solid var(--rule)}
+h1{font-family:var(--serif);font-size:clamp(34px,5.4vw,52px);font-weight:500;
+  line-height:1.08;letter-spacing:-.02em;max-width:19ch;margin-bottom:20px}
+.standfirst{font-family:var(--serif);font-size:19px;line-height:1.5;color:var(--ink-2);
+  max-width:60ch;font-weight:400}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;
+  background:var(--rule);border:1px solid var(--rule);margin:34px 0 0}
+.fact{background:var(--paper);padding:13px 16px}
+.fact dt{font:500 10px/1 var(--mono);letter-spacing:.11em;text-transform:uppercase;
+  color:var(--ink-4);margin-bottom:6px}
+.fact dd{font-family:var(--serif);font-size:17px;font-weight:500;line-height:1.25}
+.fact dd.warn{color:var(--seal)}
+
+/* ── picker ───────────────────────────────────────────────── */
+.block{margin-top:46px}
+.block-head{display:flex;align-items:baseline;justify-content:space-between;gap:20px;
+  padding-bottom:12px;border-bottom:2px solid var(--ink);margin-bottom:20px}
+.block-head h2{font-family:var(--serif);font-size:21px;font-weight:600;letter-spacing:-.01em}
+.block-head span{font:400 12px/1 var(--mono);color:var(--ink-3)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(228px,1fr));gap:9px}
+.opt{display:flex;align-items:flex-start;gap:11px;padding:13px 14px;cursor:pointer;
+  background:var(--paper-2);border:1px solid var(--rule-soft);
+  transition:background-color .13s var(--ease),border-color .13s var(--ease)}
+.opt:hover{background:var(--paper-3);border-color:var(--rule)}
+.opt input{position:absolute;opacity:0;pointer-events:none}
+.tick{flex:0 0 auto;width:17px;height:17px;margin-top:1px;border:1.5px solid var(--ink-4);
+  background:var(--paper);position:relative;
+  transition:background-color .13s var(--ease),border-color .13s var(--ease)}
+.tick::after{content:"";position:absolute;left:4.5px;top:1px;width:5px;height:10px;
+  border:solid var(--paper);border-width:0 2px 2px 0;transform:rotate(45deg) scale(0);
+  transition:transform .14s var(--ease)}
+.opt input:checked~.tick{background:var(--ink);border-color:var(--ink)}
+.opt input:checked~.tick::after{transform:rotate(45deg) scale(1)}
+.opt input:focus-visible~.tick{outline:2px solid var(--seal);outline-offset:2px}
+.opt-t{min-width:0}
+.opt-t b{display:block;font-weight:500;font-size:14.5px;line-height:1.35}
+.opt-t i{display:block;font-style:normal;font-size:12.5px;color:var(--ink-3);margin-top:2px}
+.opt.on{background:var(--seal-wash);border-color:#e0bdb6}
+
+/* ── verdict ──────────────────────────────────────────────── */
+.verdict{margin-top:22px;border:1px solid var(--rule);background:var(--paper-2)}
+.v-top{display:grid;grid-template-columns:132px 1fr;align-items:stretch}
+.score{display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:26px 14px;border-right:1px solid var(--rule);background:var(--paper)}
+.score .n{font-family:var(--serif);font-size:52px;font-weight:600;line-height:.95;
+  letter-spacing:-.03em}
+.score .d{font:500 10px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;
+  color:var(--ink-4);margin-top:8px}
+.lvl-low .n{color:var(--moss)} .lvl-med .n{color:var(--amber)} .lvl-high .n{color:var(--seal)}
+.v-body{padding:24px 26px}
+.v-body h3{font-family:var(--serif);font-size:24px;font-weight:600;line-height:1.2;
+  margin-bottom:9px;letter-spacing:-.015em}
+.lvl-low h3{color:var(--moss)} .lvl-med h3{color:var(--amber)} .lvl-high h3{color:var(--seal)}
+.v-body p{color:var(--ink-2);max-width:62ch;font-size:15px}
+.flags{border-top:1px solid var(--rule);padding:16px 26px;display:flex;flex-wrap:wrap;gap:8px}
+.flag{display:inline-flex;align-items:center;gap:7px;padding:5px 11px;
+  background:var(--paper);border:1px solid var(--rule);
+  font:500 12px/1.4 var(--sans)}
+.flag::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--seal)}
+.flag.ok::before{background:var(--moss)}
+.flag.mid::before{background:var(--amber)}
+
+/* ── precautions ──────────────────────────────────────────── */
+.steps{border-top:1px solid var(--rule);padding:18px 26px 22px}
+.steps h4{font:500 10.5px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;
+  color:var(--ink-4);margin-bottom:12px}
+.steps ol{list-style:none;counter-reset:s}
+.steps li{counter-increment:s;position:relative;padding-left:30px;margin-bottom:9px;
+  font-size:14.5px;color:var(--ink-2);max-width:66ch}
+.steps li::before{content:counter(s,decimal-leading-zero);position:absolute;left:0;top:1px;
+  font:500 11px/1.5 var(--mono);color:var(--ink-4)}
+.steps li b{color:var(--ink);font-weight:600}
+
+/* ── bridge ───────────────────────────────────────────────── */
+.bridge{border-top:1px solid var(--rule);background:var(--amber-wash);
+  padding:20px 26px;display:flex;align-items:center;justify-content:space-between;
+  gap:24px;flex-wrap:wrap}
+.bridge p{font-size:14.5px;color:var(--ink-2);max-width:52ch}
+.bridge b{color:var(--ink);font-weight:600}
+.btn{display:inline-flex;align-items:center;gap:8px;height:44px;padding:0 20px;
+  background:var(--ink);color:var(--paper);font:500 14px/1 var(--sans);
+  text-decoration:none;white-space:nowrap;border:1px solid var(--ink);
+  transition:background-color .14s var(--ease)}
+.btn:hover{background:#3a322a;text-decoration:none}
+.btn svg{transition:transform .16s var(--ease)}
+.btn:hover svg{transform:translateX(3px)}
+
+/* ── ledger ───────────────────────────────────────────────── */
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;padding:10px 14px;font:500 10.5px/1 var(--mono);letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink-4);border-bottom:1px solid var(--ink)}
+th:first-child,td:first-child{padding-left:0}
+th:last-child,td:last-child{padding-right:0;text-align:right}
+td{padding:12px 14px;border-bottom:1px solid var(--rule-soft);color:var(--ink-2);
+  vertical-align:top}
+td:last-child{text-align:right;font-family:var(--mono);font-size:12.5px;white-space:nowrap}
+td b{color:var(--ink);font-weight:600;font-family:var(--sans);font-size:14.5px}
+td .sub{display:block;font-size:12.5px;color:var(--ink-3);margin-top:2px}
+tbody tr:hover{background:var(--paper-2)}
+
+/* ── notes ────────────────────────────────────────────────── */
+details{border-bottom:1px solid var(--rule-soft)}
+summary{display:flex;gap:12px;padding:13px 0;cursor:pointer;list-style:none;
+  font-size:14.5px;color:var(--ink-2)}
+summary::-webkit-details-marker{display:none}
+summary:hover{color:var(--ink)}
+summary .n{font:500 11px/1.5 var(--mono);color:var(--ink-4);min-width:22px}
+.note-b{padding:0 0 15px 34px;max-width:70ch;color:var(--ink-3);font-size:14.5px}
+.note-b p+p{margin-top:9px}
+code{font-family:var(--mono);font-size:12.5px;background:var(--paper-3);padding:2px 5px}
+
+footer{margin-top:44px;border-top:1px solid var(--rule);padding:24px 0 70px;
+  display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;
+  font-size:12.5px;color:var(--ink-3)}
+
+@media(max-width:680px){
+  .v-top{grid-template-columns:1fr}
+  .score{border-right:0;border-bottom:1px solid var(--rule);flex-direction:row;gap:14px;padding:18px}
+  .score .d{margin-top:0}
+  .v-body{padding:20px}
+  .bridge{padding:18px 20px}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="sheet">
+
+<header class="head">
+  <div class="kicker"><span>Model dossier</span><hr><span>Verified 20 Aug 2026</span></div>
+  <h1>Ox Alpha is free. What happens to the code you send it?</h1>
+  <p class="standfirst">A stealth model appeared on OpenRouter with a one-million-token context
+  window and no price tag. The provider has not said who they are, and they keep what you send.</p>
+
+  <dl class="facts">
+    <div class="fact"><dt>Provider</dt><dd class="warn">Anonymous</dd></div>
+    <div class="fact"><dt>Prompt retention</dt><dd class="warn">Retained</dd></div>
+    <div class="fact"><dt>Used for training</dt><dd>No</dd></div>
+    <div class="fact"><dt>Context</dt><dd>1,048,576</dd></div>
+    <div class="fact"><dt>Price</dt><dd>Free · preview</dd></div>
+  </dl>
+</header>
+
+<section class="block">
+  <div class="block-head">
+    <h2>What do you plan to send it?</h2>
+    <span id="count">nothing selected</span>
+  </div>
+  <div class="grid" id="grid"></div>
+</section>
+
+<section class="verdict" id="verdict" hidden>
+  <div class="v-top">
+    <div class="score"><span class="n" id="scoreN">0</span><span class="d">of 100</span></div>
+    <div class="v-body"><h3 id="vTitle"></h3><p id="vBody"></p></div>
+  </div>
+  <div class="flags" id="flagRow"></div>
+  <div class="steps"><h4>Recommended precautions</h4><ol id="steps"></ol></div>
+  <div class="bridge">
+    <p id="bridgeCopy"></p>
+    <a class="btn" id="cta" href="#">Run agents on your own infrastructure
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6.5 3.5L11 8l-4.5 4.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+  </div>
+</section>
+
+<section class="block">
+  <div class="block-head"><h2>If the answer is no, what else?</h2><span>by workload</span></div>
+  <table>
+    <thead><tr><th>Instead of Ox Alpha</th><th>Why</th><th>Trade-off</th></tr></thead>
+    <tbody>
+      <tr><td><b>A named provider with a zero-retention policy</b><span class="sub">Anthropic, OpenAI and Google all publish enterprise terms with no training use and defined retention windows</span></td>
+        <td>You know who holds the data and can point at a contract</td><td>Paid</td></tr>
+      <tr><td><b>A model you host yourself</b><span class="sub">Qwen, DeepSeek, GLM and Llama weights run on your own hardware</span></td>
+        <td>Nothing leaves your machine</td><td>Hardware + setup</td></tr>
+      <tr><td><b>Ox Alpha, but only on code you would publish</b><span class="sub">Open-source work, throwaway scripts, public documentation</span></td>
+        <td>Retention stops mattering when the input is already public</td><td>Narrow use</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="block">
+  <div class="block-head"><h2>Sources &amp; method</h2><span>checkable</span></div>
+  <details open><summary><span class="n">01</span>Where these facts come from</summary>
+    <div class="note-b"><p>Every claim above is quoted from OpenRouter's own model page for
+    <a href="https://openrouter.ai/stealth/ox-alpha" target="_blank" rel="noopener"><code>stealth/ox-alpha</code></a>
+    and its public API, read on 20 August 2026.</p>
+    <p>OpenRouter's wording: <em>"This stealth model is developed and operated by a third-party
+    model provider. Prompts and completions for this model are retained by the provider and are
+    not used for training; all other use is governed by the Stealth Model Terms."</em></p>
+    <p>And: <em>"It is developed and operated by a third-party provider who has chosen to remain
+    anonymous during this preview. OpenRouter routes requests to it and is not its developer,
+    owner, or provider."</em></p></div>
+  </details>
+  <details><summary><span class="n">02</span>How the score is built</summary>
+    <div class="note-b"><p>Each data type carries a weight reflecting what disclosure would
+    actually cost you — credentials and customer records score highest because the damage is
+    immediate and not undoable. The weights are summed, capped at 100, and banded.</p>
+    <p>This is a judgement, not a standard. It is meant to make the trade-off explicit, not to
+    replace your own risk assessment or your employer's policy.</p></div>
+  </details>
+  <details><summary><span class="n">03</span>What is not being claimed</summary>
+    <div class="note-b"><p>Nothing here says the provider is untrustworthy. An anonymous
+    provider is not the same as a bad actor, and stealth previews are a normal way to test a
+    model before launch.</p>
+    <p>The point is narrower: you cannot evaluate a data policy when you do not know whose it
+    is, and "retained" plus "unknown jurisdiction" is a combination worth deciding about
+    deliberately rather than by default.</p></div>
+  </details>
+  <details><summary><span class="n">04</span>This will go stale</summary>
+    <div class="note-b"><p>Stealth models get named, pricing stops being free, and terms change.
+    Re-check the source page before relying on any of this.</p>
+    <p>New models appear on OpenRouter most weeks, usually without an announcement.
+    <a href="https://blognetwork.dev" target="_blank" rel="noopener">BlogNetwork</a> tracks
+    launches, pricing shifts and terms changes as they land.</p></div>
+  </details>
+</section>
+
+<footer>
+  <span>Not affiliated with OpenRouter or the Ox Alpha provider. Facts quoted from public pages, 20 Aug 2026.</span>
+  <a id="footCta" href="#">Built by Ampere.sh</a>
+</footer>
+
+</div>
+<script>
+"use strict";
+/* Weights reflect what disclosure actually costs, not how secret something feels.
+   Credentials top the list because exposure is immediate and irreversible. */
+const ITEMS=[
+  ["keys","API keys or credentials","tokens, .env contents, connection strings",30],
+  ["customer","Customer information","names, emails, anything identifying a real person",28],
+  ["financial","Financial data","revenue, payroll, unreleased numbers",24],
+  ["db","Production database schema","table structures, relationships, indexes",18],
+  ["source","Company source code","proprietary business logic",20],
+  ["private","Private repository code","internal tooling, unreleased work",16],
+  ["internal","Internal documents","strategy, roadmaps, meeting notes",14],
+  ["logs","Logs","may contain user data or tokens you have not noticed",12],
+  ["shots","Screenshots","often capture more of the screen than intended",8],
+  ["public","Public code","already on the internet",0]
+];
+const BANDS=[
+  [0,  "lvl-low","Low exposure","Nothing you have selected would hurt you if the provider kept a copy indefinitely. Ox Alpha is a reasonable choice for this work."],
+  [25, "lvl-med","Worth a decision","Some of this would matter if it were retained by a party you cannot name. Not alarming, but not something to do on autopilot."],
+  [55, "lvl-high","High exposure","You are sending material that would cause real damage if disclosed, to a provider who has not identified themselves and who keeps what you send."]
+];
+const $=id=>document.getElementById(id);
+const chosen=new Set();
+
+const grid=$("grid");
+ITEMS.forEach(([id,label,sub])=>{
+  const l=document.createElement("label");
+  l.className="opt"; l.innerHTML=
+    `<input type="checkbox" value="${id}"><span class="tick"></span>
+     <span class="opt-t"><b>${label}</b><i>${sub}</i></span>`;
+  l.querySelector("input").addEventListener("change",e=>{
+    e.target.checked?chosen.add(id):chosen.delete(id);
+    l.classList.toggle("on",e.target.checked);
+    markExplored(id); render();
+  });
+  grid.appendChild(l);
+});
+
+const utm=m=>`https://www.ampere.sh/?utm_source=ox-alpha-privacy&utm_medium=${m}&utm_campaign=ox-alpha-stealth`;
+function track(name,props,done){
+  if(window.plausible) window.plausible(name,{props,callback:done}); else if(done) done();
+}
+let explored=false;
+function markExplored(first){ if(explored) return; explored=true; track("explored",{first_pick:first}); }
+
+function render(){
+  const v=$("verdict");
+  if(!chosen.size){ v.hidden=true; $("count").textContent="nothing selected"; return; }
+  v.hidden=false;
+  $("count").textContent=chosen.size+(chosen.size===1?" type selected":" types selected");
+
+  const picked=ITEMS.filter(i=>chosen.has(i[0]));
+  const score=Math.min(100,picked.reduce((s,i)=>s+i[3],0));
+  let band=BANDS[0];
+  for(const b of BANDS) if(score>=b[0]) band=b;
+
+  v.className="verdict "+band[1];
+  $("scoreN").textContent=score;
+  $("vTitle").textContent=band[2];
+  $("vBody").textContent=band[3];
+
+  $("flagRow").innerHTML=[
+    ["Provider identity: unknown",""],
+    ["Prompts: retained",""],
+    ["Completions: retained",""],
+    ["Training use: none stated","ok"],
+    ["Status: stealth preview","mid"],
+    ["Pricing: free, may change","mid"]
+  ].map(([t,c])=>`<span class="flag ${c}">${t}</span>`).join("");
+
+  const steps=[];
+  if(chosen.has("keys")) steps.push("<b>Rotate any credential you have already pasted.</b> Retention means a copy exists regardless of what you do next.");
+  if(chosen.has("customer")) steps.push("Check whether sending personal data to an unnamed processor is compatible with your obligations — GDPR and similar regimes expect you to name your processors.");
+  if(chosen.has("source")||chosen.has("private")) steps.push("Strip identifying context. A function in isolation is far less useful to anyone than the same function with your repo structure around it.");
+  if(chosen.has("db")) steps.push("Rename tables and columns before pasting. Schema shape is usually what you need help with; your naming is not.");
+  if(chosen.has("logs")) steps.push("Grep the log for tokens and email addresses first. Logs leak more than people expect.");
+  if(score>=55) steps.push("For this category of work, prefer a provider you can name in a contract, or a model you host yourself.");
+  if(score>0&&score<25) steps.push("Keep the split you already have — public and disposable work here, sensitive work elsewhere.");
+  steps.push("Re-check the model page before your next session. Stealth terms change without notice.");
+  $("steps").innerHTML=steps.map(s=>`<li>${s}</li>`).join("");
+
+  $("bridgeCopy").innerHTML = score>=55
+    ? `<b>The problem is not the model, it is where it runs.</b> Ampere runs agents on infrastructure you control, with encrypted keys and isolated data, so the retention policy is yours rather than an anonymous provider's.`
+    : score>=25
+    ? `<b>Worth keeping the boundary deliberate.</b> Ampere runs agents with encrypted keys and isolated data, so sensitive work does not depend on a stranger's retention terms.`
+    : `<b>Fine for this workload.</b> When work moves to something you would not publish, Ampere runs agents with encrypted keys and isolated data on infrastructure you control.`;
+
+  const med=score>=55?"result-high":score>=25?"result-med":"result-low";
+  $("cta").href=utm(med);
+}
+
+["cta","footCta"].forEach(id=>{
+  $(id).addEventListener("click",ev=>{
+    const a=ev.currentTarget;
+    const props={placement:id==="footCta"?"footer":"result",
+      score:String(Math.min(100,ITEMS.filter(i=>chosen.has(i[0])).reduce((s,i)=>s+i[3],0))),
+      types:String(chosen.size)};
+    if(ev.metaKey||ev.ctrlKey||ev.shiftKey||ev.button!==0){ track("ampere_click",props); return; }
+    ev.preventDefault();
+    let gone=false; const go=()=>{if(gone)return;gone=true;window.location.href=a.href;};
+    track("ampere_click",props,go); setTimeout(go,900);
+  });
+});
+$("footCta").href=utm("footer");
+</script>
+</body>
+</html>
